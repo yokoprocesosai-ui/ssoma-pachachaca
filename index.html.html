@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>SSOMA · Pachachaca · C.MEJIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0C1C2E;--navy-m:#132740;--navy-l:#1A3555;
+  --steel:#1F4068;--steel-l:#2A5490;
+  --cyan:#1E90D4;--cyan-h:#2FA8F0;--cyan-bg:#EAF5FD;--cyan-xl:#F2F9FF;
+  --green:#0D9B6A;--green-bg:#E5F7F1;--green-l:#C3EDE0;
+  --red:#D93025;--red-bg:#FDECEA;--red-l:#FDD;
+  --amber:#C47C0A;--amber-bg:#FEF4E0;
+  --violet:#6248BB;--violet-bg:#EDE9FB;
+  --slate:#F1F4F8;--slate-m:#E0E6EE;--slate-d:#C8D2DE;
+  --mist:#8796A8;--fog:#B0BBC8;
+  --txt:#0C1C2E;--txt-m:#354A60;--txt-s:#607080;
+  --white:#fff;
+  --sw:224px;--th:54px;--ah:auto;--bh:62px;
+  --r1:5px;--r2:9px;--r3:13px;--r4:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--slate);color:var(--txt);font-size:14px;line-height:1.5}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--slate-d);border-radius:3px}
+input,select,textarea{font-family:'DM Sans',sans-serif}
+.inp{width:100%;background:var(--white);border:1.5px solid var(--slate-d);border-radius:var(--r2);padding:9px 13px;color:var(--txt);font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
+.inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(30,144,212,.12)}
+.inp::placeholder{color:var(--fog)}
+.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1.5l4.5 4 4.5-4' stroke='%238796A8' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:32px;cursor:pointer}
+.btn{border:none;border-radius:var(--r2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 20px}
+.btn-primary{background:var(--cyan);color:#fff;box-shadow:0 1px 4px rgba(30,144,212,.35)}
+.btn-primary:hover{background:var(--cyan-h)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-ghost{background:transparent;border:1.5px solid var(--slate-d);color:var(--txt-m)}
+.btn-ghost:hover{background:var(--slate)}
+.btn-sm{min-height:36px;padding:0 14px;font-size:12.5px;border-radius:var(--r1)}
+.btn-lime{background:var(--green);color:#fff;border:none}
+.btn-lime:hover{filter:brightness(1.08)}
+.btn-lime:disabled{opacity:.4;cursor:not-allowed}
+.app-shell{display:flex;height:100vh;overflow:hidden;position:relative}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sw);background:var(--navy);display:flex;flex-direction:column;flex-shrink:0;z-index:20;transition:transform .24s ease;box-shadow:3px 0 20px rgba(0,0,0,.3)}
+.sb-logo{padding:10px 14px 9px;border-bottom:1px solid rgba(255,255,255,.07);background:#fff}
+.sb-logo img{width:100%;max-width:175px;height:auto;display:block;image-rendering:auto}
+.sb-project{background:linear-gradient(135deg,var(--steel) 0%,var(--navy-l) 100%);padding:9px 15px 11px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-project .p-tag{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1.4px;text-transform:uppercase;margin-bottom:2px}
+.sb-project .p-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1.2}
+.sb-project .p-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(30,144,212,.28);border:1px solid rgba(30,144,212,.48);border-radius:4px;padding:2px 8px;font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:#7ECEF5;letter-spacing:.8px;text-transform:uppercase;margin-top:4px}
+.sb-period{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-period-lbl{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px;display:block}
+.period-sel{width:100%;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:var(--r2);padding:8px 30px 8px 11px;color:#fff;font-size:12.5px;font-weight:600;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,.55)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .15s}
+.period-sel:focus{border-color:rgba(255,255,255,.45)}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 7px}
+.sb-nav::-webkit-scrollbar{width:2px}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12)}
+.nav-grp{display:flex;align-items:center;gap:6px;padding:7px 8px 4px;margin-top:5px}
+.nav-grp:first-child{margin-top:0}
+.nav-grp-title{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:rgba(255,255,255,.38);letter-spacing:1.5px;text-transform:uppercase}
+.nav-grp-badge{background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);font-size:9px;padding:1px 6px;border-radius:4px;font-weight:700;font-family:'Rajdhani',sans-serif}
+.prog-btn{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--r1);cursor:pointer;font-size:11.5px;font-weight:400;color:rgba(255,255,255,.6);transition:all .15s;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif;min-height:30px}
+.prog-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.88)}
+.prog-btn.active{background:rgba(30,144,212,.22);color:#fff;font-weight:600;border-left:2.5px solid var(--cyan);padding-left:8px}
+.prog-btn.active .prog-badge{background:var(--cyan);color:#fff}
+.prog-badge{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;flex-shrink:0;background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);font-family:'Rajdhani',sans-serif}
+.sb-footer{padding:11px 14px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-foot-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sb-foot-lbl{font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.2px;text-transform:uppercase}
+.sb-foot-pct{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;line-height:1}
+.prog-track{height:5px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;margin:4px 0 6px}
+.prog-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.sb-foot-meta{display:flex;justify-content:space-between;font-size:10.5px;color:rgba(255,255,255,.5)}
+
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;backdrop-filter:blur(2px)}
+.drawer-overlay.open{display:block}
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--th);background:var(--white);border-bottom:2px solid var(--slate-m);display:flex;align-items:center;padding:0 15px;gap:11px;flex-shrink:0;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.topbar-logo{display:none}
+.topbar-logo img{height:32px;width:auto;image-rendering:auto}
+.topbar-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--navy);white-space:nowrap;letter-spacing:.5px;text-transform:uppercase}
+.search-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--slate);border:1.5px solid var(--slate-d);border-radius:var(--r2);padding:7px 12px;transition:border-color .15s,background .15s}
+.search-wrap:focus-within{background:var(--white);border-color:var(--cyan);box-shadow:0 0 0 3px rgba(30,144,212,.1)}
+.search-wrap input{border:none;background:transparent;outline:none;flex:1;font-size:13px;color:var(--txt);font-family:'DM Sans',sans-serif}
+.search-wrap input::placeholder{color:var(--fog)}
+.hamburger{background:none;border:1.5px solid var(--slate-d);border-radius:var(--r1);cursor:pointer;padding:7px 8px;display:flex;flex-direction:column;gap:4px;min-width:40px;min-height:40px;justify-content:center;align-items:center;transition:background .15s}
+.hamburger:hover{background:var(--slate)}
+.hamburger span{width:16px;height:2px;background:var(--navy);border-radius:2px;display:block}
+
+/* ── ACTIVITY BAR ── */
+.activ-bar{background:#fff;padding:0 14px;height:48px;display:flex;align-items:center;gap:8px;flex-shrink:0;overflow-x:auto;border-bottom:2px solid var(--cyan);border-top:1px solid var(--slate-m)}
+.activ-bar::-webkit-scrollbar{height:0}
+.activ-tag{display:flex;align-items:center;gap:5px;background:var(--navy);border:none;border-radius:var(--r1);padding:5px 10px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;letter-spacing:.8px;text-transform:uppercase}
+.activ-bar .sel-wrap{display:flex;align-items:center;gap:6px;flex:0 1 340px;min-width:180px}
+.activ-bar .sel-lbl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--txt-s);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.activ-bar .inp,.activ-bar .sel{background:#fff;border:1.5px solid var(--slate-d);color:var(--txt);font-size:13px;font-weight:600;padding:6px 28px 6px 10px;border-radius:var(--r2);flex:1;min-width:0;height:36px}
+.activ-bar .inp:focus,.activ-bar .sel:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(30,144,212,.15);outline:none}
+.activ-bar .sel.has-value{border-color:var(--cyan);background:var(--cyan-bg);color:var(--navy);font-weight:700}
+.activ-bar .inp option,.activ-bar .sel option{background:#fff;color:var(--txt)}
+
+/* ── FILTER BAR ── */
+.filter-bar{padding:8px 15px;background:var(--white);border-bottom:1px solid var(--slate-m);display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.stat-pill{border-radius:var(--r2);padding:5px 11px;text-align:center;min-width:58px;display:flex;flex-direction:column;gap:1px;border:1.5px solid transparent}
+.stat-num{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;line-height:1.1}
+.stat-lbl{font-family:'Rajdhani',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.content-area{flex:1;overflow-y:auto;padding:14px 15px 80px}
+
+/* ── SUB-GROUP ── */
+.sub-hdr{display:flex;align-items:center;gap:10px;margin:22px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--cyan-bg)}
+.sub-hdr:first-child{margin-top:0}
+.sub-title{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.sub-line{flex:1;height:1px;background:var(--cyan-bg)}
+.sub-count{font-family:'Rajdhani',sans-serif;font-size:10px;color:var(--mist);background:var(--slate);border:1px solid var(--slate-m);padding:2px 8px;border-radius:4px;font-weight:600;white-space:nowrap;letter-spacing:.3px}
+
+/* ── CARDS ── */
+.commit-card{background:var(--white);border:1.5px solid var(--slate-m);border-left:4px solid var(--slate-d);border-radius:var(--r3);margin-bottom:8px;overflow:hidden;transition:box-shadow .15s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.commit-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.09)}
+.commit-card.done{border-left-color:var(--green)}
+.commit-card.parcial{border-left-color:var(--red)}
+.commit-card.noaplica{border-left-color:var(--slate-d)}
+.commit-card.nocorresponde{border-left-color:var(--violet)}
+.commit-card.pending{border-left-color:var(--amber)}
+.card-hdr{padding:13px 15px;display:flex;align-items:flex-start;gap:11px;cursor:pointer;user-select:none}
+.card-hdr:active{background:var(--slate)}
+.card-body{padding:12px 15px 15px;border-top:1px solid var(--slate-m);background:var(--cyan-xl)}
+.status-orb{width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2.5px solid;font-family:'Rajdhani',sans-serif}
+
+/* ── CHIPS ── */
+.chip{font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;font-family:'Rajdhani',sans-serif;letter-spacing:.3px}
+.chip-done{background:var(--green-l);color:#065F46}
+.chip-parcial{background:var(--red-l);color:#9B1B0A}
+.chip-noaplica{background:var(--slate-m);color:var(--txt-s)}
+.chip-nocorresponde{background:var(--violet-bg);color:var(--violet)}
+.chip-pending{background:var(--amber-bg);color:var(--amber)}
+
+/* ── EVIDENCE RECORD ── */
+.ev-rec{background:var(--white);border:1.5px solid var(--slate-m);border-radius:var(--r2);padding:11px 13px;position:relative}
+.file-chip{display:inline-flex;align-items:center;gap:5px;background:var(--slate);border:1px solid var(--slate-m);border-radius:var(--r1);padding:4px 9px;font-size:11px;font-family:'Rajdhani',sans-serif}
+.upload-zone{border:2px dashed #92C8E8;border-radius:var(--r3);padding:22px;text-align:center;cursor:pointer;background:var(--cyan-bg);transition:all .2s}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--cyan);background:rgba(30,144,212,.08)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(12,28,46,.65);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal-box{background:#fff;border-radius:var(--r4);width:min(640px,100%);max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.32);border-top:4px solid var(--cyan)}
+.m-hdr{padding:17px 20px 13px;border-bottom:1px solid var(--slate-m)}
+.m-body{padding:15px 20px 20px;display:flex;flex-direction:column;gap:13px}
+.flbl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px}
+.info-strip{background:var(--cyan-xl);border:1px solid rgba(30,144,212,.15);border-radius:var(--r2);padding:10px 13px}
+.warn-box{background:#FFFBEB;border:1.5px solid #FCD34D;border-radius:var(--r2);padding:10px 13px;font-size:12.5px;color:#92400E;display:flex;gap:9px;align-items:flex-start;line-height:1.5}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%);padding:11px 22px;border-radius:var(--r2);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.3px;box-shadow:0 8px 32px rgba(0,0,0,.25);z-index:200;white-space:nowrap;pointer-events:none}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bh);background:var(--white);border-top:2px solid var(--slate-m);z-index:30;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
+.bnav-inner{display:flex;height:100%}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:transparent;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--mist);padding:4px 2px;transition:color .15s;letter-spacing:.4px;text-transform:uppercase}
+.bnav-btn.active{color:var(--cyan)}
+.bnav-icon{font-size:18px;line-height:1}
+.bnav-fab-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1}
+.bnav-fab{width:46px;height:46px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 4px 16px rgba(30,144,212,.55);border:3px solid var(--white);cursor:pointer;color:var(--white);font-size:20px}
+.bnav-fab:hover{background:var(--cyan-h)}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes slideInLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(12px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+.anim-sd{animation:slideDown .18s ease}
+.modal-box{animation:fadeUp .22s ease}
+.toast{animation:toastIn .2s ease}
+
+@media(max-width:768px){
+  .sidebar{position:fixed;top:0;bottom:0;left:0;z-index:50;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);animation:slideInLeft .24s ease}
+  .topbar-logo{display:block}
+  .topbar-title{display:none}
+  .filter-bar{gap:7px}
+  .filter-bar .resp-filter{order:3;width:100%}
+  .content-area{padding:12px 11px 80px}
+  .bottom-nav{display:block}
+  .activ-bar{padding:0 10px;gap:7px;height:48px}
+  .modal-overlay{padding:0;align-items:flex-end}
+  .modal-box{border-radius:var(--r4) var(--r4) 0 0;width:100%;max-height:94vh}
+  .commit-card{margin-bottom:7px}
+  .card-hdr{padding:11px 12px}
+  .card-body{padding:11px 12px 13px}
+  .sub-hdr{margin:16px 0 8px}
+  .stat-pill{min-width:46px;padding:4px 8px}
+  .mfg{grid-template-columns:1fr!important}
+  .m-hdr{padding:15px 16px 12px}
+  .m-body{padding:13px 16px 18px;gap:12px}
+  .info-strip .info-grid{grid-template-columns:1fr 1fr!important}
+}
+@media(min-width:769px){
+  .hamburger{display:none}
+  .bottom-nav{display:none!important}
+  .content-area{padding:15px 17px 17px}
+  .toast{bottom:22px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/msal-browser/3.10.0/msal-browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script>
+const SP_CLIENT_ID="e038baa3-c4c0-450b-acc5-49254ad34220";
+const SP_SITE_URL="https://cmejiacontratistas.sharepoint.com/sites/SSOMA";
+const SP_SCOPES=["https://graph.microsoft.com/Files.ReadWrite","https://graph.microsoft.com/Sites.Selected","https://graph.microsoft.com/User.Read","offline_access"];
+const SP_LIB_SUBFOLDER="Pachachaca";  // carpeta del proyecto dentro de Documentos
+let _app=null,_acc=null;
+
+function spInit(){
+  if(_app)return _app;
+  if(typeof msal==="undefined")return null;
+  _app=new msal.PublicClientApplication({
+    auth:{clientId:SP_CLIENT_ID,authority:"https://login.microsoftonline.com/common",redirectUri:location.href},
+    cache:{cacheLocation:"localStorage",storeAuthStateInCookie:true}
+  });
+  const accs=_app.getAllAccounts();
+  if(accs.length)_acc=accs[0];
+  return _app;
+}
+
+async function spConnect(onStatus){
+  const app=spInit();
+  if(!app){onStatus("error","MSAL no cargó");return null;}
+  // 1. Sesión activa en cache
+  if(_acc){
+    try{
+      await app.acquireTokenSilent({scopes:SP_SCOPES,account:_acc});
+      onStatus("ok",_acc.name);
+      return {name:_acc.name,email:_acc.username};
+    }catch(e){}
+  }
+  // 2. SSO silencioso (sesión del navegador)
+  try{
+    onStatus("connecting","Detectando sesión...");
+    const r=await app.ssoSilent({scopes:SP_SCOPES});
+    _acc=r.account;
+    onStatus("ok",_acc.name);
+    return {name:_acc.name,email:_acc.username};
+  }catch(e){}
+  // 3. Popup (solo si no hay sesión)
+  try{
+    onStatus("connecting","Iniciando sesión Microsoft...");
+    const r=await app.loginPopup({scopes:SP_SCOPES});
+    _acc=r.account;
+    onStatus("ok",_acc.name);
+    return {name:_acc.name,email:_acc.username};
+  }catch(e){
+    const code=e.errorCode||"";
+    if(code==="user_cancelled")onStatus("cancelled","");
+    else onStatus("error",e.message||"Error de login");
+    return null;
+  }
+}
+
+async function spToken(){
+  const app=spInit();if(!app)throw new Error("MSAL no cargado");
+  try{const r=await app.acquireTokenSilent({scopes:SP_SCOPES,account:_acc});return r.accessToken;}
+  catch{const r=await app.acquireTokenPopup({scopes:SP_SCOPES});_acc=r.account;return r.accessToken;}
+}
+
+async function spDriveId(token){
+  const host=new URL(SP_SITE_URL).hostname;
+  const path=new URL(SP_SITE_URL).pathname;
+  const s=await fetch(`https://graph.microsoft.com/v1.0/sites/${host}:${path}`,{headers:{Authorization:"Bearer "+token}});
+  if(!s.ok){
+    const err=await s.json().catch(()=>({}));
+    throw new Error("Sin acceso al sitio SharePoint: "+(err.error?.message||s.status)+". Verificar SP_SITE_URL.");
+  }
+  const site=await s.json();
+  const dr=await fetch(`https://graph.microsoft.com/v1.0/sites/${site.id}/drives`,{headers:{Authorization:"Bearer "+token}});
+  const d=await dr.json();
+  // Acepta tanto "Documents" (inglés) como "Documentos" (español)
+  const lib=d.value.find(x=>x.name==="Documents"||x.name==="Documentos"||x.name==="Documentos compartidos"||x.driveType==="documentLibrary");
+  if(!lib)throw new Error("No se encontró la biblioteca. Disponibles: "+d.value.map(x=>x.name).join(", "));
+  return {driveId:lib.id, libName:lib.name};
+}
+
+async function spFolder(token,driveId,path){
+  const parts=path.split("/").map(p=>p.trim()).filter(Boolean);
+  let pid="root";
+  for(const part of parts){
+    const safe=part.replace(/[\/:*?"<>|]/g,"-");
+    const r=await fetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${pid}/children`,{
+      method:"POST",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({name:safe,folder:{}, "@microsoft.graph.conflictBehavior":"fail"})
+    });
+    if(r.ok){pid=(await r.json()).id;}
+    else if(r.status===409){
+      const l=await fetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${pid}/children?$filter=name eq '${encodeURIComponent(safe)}'&$select=id`,{headers:{Authorization:"Bearer "+token}});
+      const data=await l.json();
+      if(!data.value?.length)throw new Error("No se pudo resolver carpeta: "+safe);
+      pid=data.value[0].id;
+    }else{const e=await r.json().catch(()=>({}));throw new Error("Error carpeta "+safe+": "+(e.error?.message||r.status));}
+  }
+  return pid;
+}
+
+async function spUpload(token,driveId,folderId,name,blob){
+  const safe=name.replace(/[\/:*?"<>|]/g,"-");
+  const r=await fetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${folderId}:/${encodeURIComponent(safe)}:/content`,{
+    method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":blob.type||"application/octet-stream"},body:blob
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error("Error subiendo "+safe+": "+(e.error?.message||r.status));}
+  return r.json();
+}
+
+function spDate(ts){const d=new Date(ts||Date.now());return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function spSafe(s){return String(s).replace(/[\/:*?"<>|]/g,"-").replace(/\s+/g,"_").slice(0,80);}
+
+async function spGuardar(drive,reg,comp,onPct){
+  const driveId=drive.driveId;
+  const token=await spToken();
+  const folder=`${drive.libName}/${SP_LIB_SUBFOLDER}/${reg.periodo}/${comp.prog} - ${comp.progNombre.replace(/[/:]/g,"").trim().slice(0,50)}`;
+  onPct(10,"Creando carpetas...");
+  const fid=await spFolder(token,driveId,folder);
+  const base=`${spDate(reg.fecha)}_${comp.id}_${spSafe(comp.texto.slice(0,35))}`;
+  const files=reg.files||[];
+  for(let i=0;i<files.length;i++){
+    const f=files[i];
+    onPct(Math.round(20+(i/Math.max(files.length,1))*55),`Subiendo ${i+1}/${files.length}: ${f.name}`);
+    if(f.blob)await spUpload(token,driveId,fid,`${base}_${f.name}`,f.blob);
+  }
+  onPct(85,"Guardando registro JSON...");
+  const meta={id:reg.id,fecha:spDate(reg.fecha),periodo:reg.periodo,compromisoId:comp.id,
+    programa:comp.progNombre,subPrograma:comp.subNombre,compromiso:comp.texto,
+    medioVerificacion:comp.medio,responsablePrograma:comp.resp,responsableSSOMa:reg.ssoma,
+    estado:reg.estado,notas:reg.notas||"",sustento:reg.sustento||"",
+    archivos:(files||[]).map(f=>f.name),carpeta:folder};
+  await spUpload(token,driveId,fid,`${base}_REGISTRO.json`,new Blob([JSON.stringify(meta,null,2)],{type:"application/json"}));
+  onPct(100,"Guardado en SharePoint");
+}
+
+async function spExportar(drive,registros,periodo,compromisos,onPct){
+  const driveId=drive.driveId;
+  const token=await spToken();
+  onPct(10,"Generando informe...");
+  const regs=registros.filter(r=>r.periodo===periodo);
+  const hdr=["ID","Programa","Sub-programa","Compromiso","Estado","Resp. SSOMA","Fecha","Notas","Sustento","Archivos"];
+  const rows=regs.map(r=>{
+    const c=compromisos.find(x=>x.id===r.compromisoId)||{};
+    return [r.id,c.progNombre||"",c.subNombre||"",c.texto||"",r.estado,r.ssoma,spDate(r.fecha),
+      (r.notas||"").replace(/,/g,"；"),(r.sustento||"").replace(/,/g,"；"),
+      (r.files||[]).map(f=>f.name).join(" | ")
+    ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",");
+  });
+  const blob=new Blob(["\uFEFF"+[hdr.join(","),...rows].join("\r\n")],{type:"text/csv;charset=utf-8;"});
+  onPct(50,"Subiendo informe...");
+  const fid=await spFolder(token,drive.driveId,`${drive.libName}/${SP_LIB_SUBFOLDER}/${periodo}`);
+  await spUpload(token,driveId,fid,`INFORME_${periodo.replace(/\s/g,"_")}.csv`,blob);
+  onPct(100,"Informe guardado");
+}
+
+window.SP={spInit,spConnect,spToken,spDriveId,spGuardar,spExportar,spDate,spSafe};
+</script>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const LOGO = "data:image/jpeg;base64,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";
+
+const ACTIVIDADES=[{id:"MOV",label:"Movilización de materiales y equipos",subs:[]},{id:"DES",label:"Desbroces y limpieza del terreno",subs:[]},{id:"CIV",label:"Ejecución de obras civiles",subs:[{id:"CIV1",label:"Bases de equipos electromecánicos y pórticos"},{id:"CIV2",label:"Bases de la losa de aproximación"},{id:"CIV3",label:"Canaletas"},{id:"CIV4",label:"Base de transformador de potencial"}]},{id:"MON",label:"Instalación y montaje de equipos electromecánicos",subs:[]},{id:"REV",label:"Revegetación",subs:[]},{id:"ABA",label:"Abandono constructivo",subs:[]}];
+const RESPONSABLES=["Todos","ING. SSOMA","ING. CIVIL","SUPERVISOR AMBIENTAL","ADMINISTRACION","RESIDENTE DE OBRA","ING. SSOMA / SUPERVISOR AMBIENTAL","ING. SSOMA / ADMINISTRACION"];
+const ESTADOS=["Cumplido al 100%","Cumplido parcialmente","No aplica este período","No corresponde","Pendiente"];
+const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const fmtDate=d=>new Date(d).toLocaleDateString("es-PE",{day:"2-digit",month:"short",year:"numeric"});
+const fileSz=b=>b<1048576?(b/1024).toFixed(0)+"KB":(b/1048576).toFixed(1)+"MB";
+const fileIcon=t=>t&&t.startsWith("image")?"📷":t&&t.includes("pdf")?"📄":t&&t.includes("word")?"📝":"📎";
+function lsLoad(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function lsSave(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+const ECFG={"Cumplido al 100%":{cls:"done",chip:"chip-done",circle:"var(--green)",circleBg:"var(--green-bg)",sign:"✓"},"Cumplido parcialmente":{cls:"parcial",chip:"chip-parcial",circle:"var(--red)",circleBg:"var(--red-bg)",sign:"!"},"No aplica este período":{cls:"noaplica",chip:"chip-noaplica",circle:"var(--mist)",circleBg:"var(--slate-m)",sign:"—"},"No corresponde":{cls:"nocorresponde",chip:"chip-nocorresponde",circle:"var(--violet)",circleBg:"var(--violet-bg)",sign:"✕"},"Pendiente":{cls:"pending",chip:"chip-pending",circle:"var(--amber)",circleBg:"var(--amber-bg)",sign:"○"}};
+
+const COMPROMISOS=[{id:"c01",prog:"P1",sub:"P1S1",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Manejo del nivel sonoro",texto:"Vehículos y maquinarias en óptimas condiciones de funcionamiento",medio:"Certificado de revisión técnica vehicular",resp:"ING. SSOMA"},{id:"c02",prog:"P1",sub:"P1S1",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Manejo del nivel sonoro",texto:"Check list de vehículo",medio:"Check list de vehículo",resp:"ING. SSOMA"},{id:"c03",prog:"P1",sub:"P1S1",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Manejo del nivel sonoro",texto:"Check list de equipo motorizado",medio:"Check list de equipo motorizado",resp:"ING. SSOMA"},{id:"c04",prog:"P1",sub:"P1S1",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Manejo del nivel sonoro",texto:"Capacitación conductores — prohibición de sirenas y bocinas innecesarias",medio:"Registro de capacitación uso de sirenas y bocinas",resp:"ING. SSOMA"},{id:"c05",prog:"P1",sub:"P1S1",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Manejo del nivel sonoro",texto:"Entrega de reglamento interno SSOMA",medio:"Cargo de entrega de reglamento interno de SSOMA",resp:"ING. SSOMA"},{id:"c06",prog:"P1",sub:"P1S1",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Manejo del nivel sonoro",texto:"Protectores auditivos para trabajadores expuestos a ruido",medio:"Registro de entrega de EPPs",resp:"ING. SSOMA"},{id:"c07",prog:"P1",sub:"P1S2",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Control de afectación del suelo",texto:"Limitar corte de vegetación a lo estrictamente necesario",medio:"Registro fotográfico (delimitación de área)",resp:"ING. SSOMA"},{id:"c08",prog:"P1",sub:"P1S2",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Control de afectación del suelo",texto:"Evitar exposición del suelo descubierto — procesos de revegetación",medio:"Checklist GMA-R-012 / Registro fotográfico",resp:"ING. SSOMA"},{id:"c09",prog:"P1",sub:"P1S2",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Control de afectación del suelo",texto:"Instalación de sistemas de drenaje superficial (cunetas, zanjas de coronación)",medio:"Checklist GMA-R-012",resp:"ING. SSOMA"},{id:"c10",prog:"P1",sub:"P1S2",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Control de afectación del suelo",texto:"Control de salida de material excedente",medio:"Registro GMA-R-008 / Registro fotográfico",resp:"ING. CIVIL"},{id:"c11",prog:"P1",sub:"P1S2",progNombre:"Prevención, Corrección y/o Mitigación Ambiental",subNombre:"Control de afectación del suelo",texto:"Control de generación de topsoil (suelo orgánico y vegetación)",medio:"Control GMA-R-011 / Registro fotográfico",resp:"ING. SSOMA"},{id:"c12",prog:"P2",sub:"P2S1",progNombre:"Protección de Flora y Fauna",subNombre:"Control de remoción de cobertura vegetal",texto:"Prohibición de extracción, tala de vegetación y quemas fuera del límite",medio:"Registro de capacitación / Señalización",resp:"ING. SSOMA"},{id:"c13",prog:"P2",sub:"P2S1",progNombre:"Protección de Flora y Fauna",subNombre:"Control de remoción de cobertura vegetal",texto:"Limitación de áreas de trabajo e instalaciones provisionales a lo necesario",medio:"Registro fotográfico (delimitación y señalización del área)",resp:"ING. SSOMA"},{id:"c14",prog:"P2",sub:"P2S1",progNombre:"Protección de Flora y Fauna",subNombre:"Control de remoción de cobertura vegetal",texto:"Rescate de ichu por bloques para reutilización en abandono",medio:"Registro fotográfico",resp:"ING. SSOMA"},{id:"c15",prog:"P2",sub:"P2S1",progNombre:"Protección de Flora y Fauna",subNombre:"Control de remoción de cobertura vegetal",texto:"Rehabilitación de áreas alteradas al culminar la obra",medio:"Programa de revegetación",resp:"ING. SSOMA"},{id:"c16",prog:"P2",sub:"P2S2",progNombre:"Protección de Flora y Fauna",subNombre:"Prevención de alteración de hábitat de fauna",texto:"Velocidad máxima 30 km/h en zonas de obra",medio:"Registro fotográfico (señalización)",resp:"ING. SSOMA"},{id:"c17",prog:"P2",sub:"P2S2",progNombre:"Protección de Flora y Fauna",subNombre:"Prevención de alteración de hábitat de fauna",texto:"Charlas de concientización ambiental sobre flora y fauna",medio:"Registro de capacitación",resp:"ING. SSOMA"},{id:"c18",prog:"P2",sub:"P2S2",progNombre:"Protección de Flora y Fauna",subNombre:"Prevención de alteración de hábitat de fauna",texto:"Folletos informativos sobre especies en categoría de protección",medio:"Registro de entrega de folletos",resp:"ING. SSOMA"},{id:"c19",prog:"P2",sub:"P2S2",progNombre:"Protección de Flora y Fauna",subNombre:"Prevención de alteración de hábitat de fauna",texto:"Prohibición de caza furtiva de fauna silvestre",medio:"Registro de capacitación",resp:"ING. SSOMA"},{id:"c20",prog:"P3",sub:"P3S1",progNombre:"Minimización y Manejo de Residuos Sólidos",subNombre:"Gestión de RRSS",texto:"Registro diario de generación de residuos sólidos",medio:"Registro de RRSS (pesado diario, almacenamiento, transporte y disposición final)",resp:"ING. SSOMA"},{id:"c21",prog:"P3",sub:"P3S1",progNombre:"Minimización y Manejo de Residuos Sólidos",subNombre:"Gestión de RRSS",texto:"Reporte en plataforma SIGERSOL NO MUNICIPAL",medio:"Registro en la plataforma SIGERSOL",resp:"SUPERVISOR AMBIENTAL"},{id:"c22",prog:"P3",sub:"P3S1",progNombre:"Minimización y Manejo de Residuos Sólidos",subNombre:"Gestión de RRSS",texto:"Registro fotográfico del manejo y disposición final de residuos",medio:"Registro fotográfico",resp:"ING. SSOMA"},{id:"c23",prog:"P3",sub:"P3S1",progNombre:"Minimización y Manejo de Residuos Sólidos",subNombre:"Gestión de RRSS",texto:"Manifiesto del manejo de residuos sólidos peligrosos",medio:"Manifiesto RRSS peligrosos",resp:"ING. SSOMA"},{id:"c24",prog:"P3",sub:"P3S1",progNombre:"Minimización y Manejo de Residuos Sólidos",subNombre:"Gestión de RRSS",texto:"Registro de capacitaciones de residuos sólidos",medio:"Registro de capacitación",resp:"ING. SSOMA / SUPERVISOR AMBIENTAL"},{id:"c25",prog:"P4",sub:"P4S1",progNombre:"Programa de Revegetación",subNombre:"Revegetación al finalizar obra",texto:"Procedimiento de revegetación al finalizar la etapa de construcción",medio:"Programa de revegetación",resp:"ING. SSOMA / SUPERVISOR AMBIENTAL"},{id:"c26",prog:"P5",sub:"P5S1",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Acciones de capacitación del personal",texto:"Capacitación: causas/consecuencias de accidentes, prevención y procedimientos de emergencia",medio:"Registro de capacitación y registro fotográfico",resp:"ING. SSOMA"},{id:"c27",prog:"P5",sub:"P5S2",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Protección de la salud e higiene",texto:"Examen médico preocupacional (CAMO) antes de iniciar labores",medio:"CAMO",resp:"ING. SSOMA"},{id:"c28",prog:"P5",sub:"P5S2",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Protección de la salud e higiene",texto:"Fumigación de la zona de campamento",medio:"Certificado de fumigación / Procedimiento / MSDS",resp:"ING. SSOMA / SUPERVISOR AMBIENTAL"},{id:"c29",prog:"P5",sub:"P5S2",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Protección de la salud e higiene",texto:"Control de insectos en campamento / higiene en instalaciones",medio:"Registro fotográfico / orden y limpieza",resp:"ING. SSOMA"},{id:"c30",prog:"P5",sub:"P5S3",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes y enfermedades laborales",texto:"Señalización de zonas de riesgo / entrega de EPP / botiquín / supervisión permanente",medio:"Registro fotográfico / Registro EPPs / Inspección botiquín",resp:"ING. SSOMA"},{id:"c31",prog:"P5",sub:"P5S3",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes y enfermedades laborales",texto:"Evaluaciones médicas periódicas al personal",medio:"CAMO",resp:"ING. SSOMA"},{id:"c32",prog:"P5",sub:"P5S3",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes y enfermedades laborales",texto:"Charlas sobre medio ambiente, seguridad y salud ocupacional",medio:"Registro de capacitación",resp:"ING. SSOMA"},{id:"c33",prog:"P5",sub:"P5S3",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes y enfermedades laborales",texto:"Inspección de equipos de emergencia",medio:"Inspección de equipos de emergencia",resp:"ING. SSOMA"},{id:"c34",prog:"P5",sub:"P5S4",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes a la población local",texto:"Informar a la población local sobre trabajos a realizar",medio:"Registro de capacitación y fotografía",resp:"ING. SSOMA"},{id:"c35",prog:"P5",sub:"P5S4",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes a la población local",texto:"Señalizar adecuadamente los frentes de trabajo con cintas, conos y tranqueras",medio:"Registro fotográfico (señalización del área de trabajo)",resp:"ING. SSOMA"},{id:"c36",prog:"P5",sub:"P5S4",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Control de accidentes a la población local",texto:"Comunicación anticipada a poblaciones cercanas sobre actividades a realizar",medio:"Registro de capacitación",resp:"ING. SSOMA"},{id:"c37",prog:"P5",sub:"P5S5",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Prevención y mitigación de derrames",texto:"Abastecimiento de combustible solo en establecimientos autorizados",medio:"Factura de compra de combustible / Registro fotográfico",resp:"ADMINISTRACION"},{id:"c38",prog:"P5",sub:"P5S5",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Prevención y mitigación de derrames",texto:"Kit de contingencias contra derrames en vehículos y maquinarias",medio:"Inspección de kit antiderrame del vehículo",resp:"ING. SSOMA"},{id:"c39",prog:"P5",sub:"P5S5",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Prevención y mitigación de derrames",texto:"Formato de derrames en caso de contingencia",medio:"Formato de derrames",resp:"ING. SSOMA"},{id:"c40",prog:"P5",sub:"P5S5",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Prevención y mitigación de derrames",texto:"Mantenimiento periódico de vehículos y maquinarias",medio:"Programa de mantenimiento / Factura",resp:"ING. SSOMA / ADMINISTRACION"},{id:"c41",prog:"P5",sub:"P5S6",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Manejo de sustancias peligrosas",texto:"Brigada de emergencia entrenada para respuesta ante sustancias peligrosas",medio:"Brigada de emergencia",resp:"ING. SSOMA"},{id:"c42",prog:"P5",sub:"P5S6",progNombre:"Seguridad, Higiene y Salud Laboral",subNombre:"Manejo de sustancias peligrosas",texto:"Equipamiento para derrames de aceites, combustibles y solventes",medio:"Registro fotográfico de la estación de emergencia",resp:"ING. SSOMA"},{id:"c43",prog:"P6",sub:"P6S1",progNombre:"Manejo de Aspectos Socioeconómicos",subNombre:"Gestión social y laboral",texto:"Contratación temporal de mano de obra local",medio:"Contrato de personal de la zona",resp:"ADMINISTRACION"},{id:"c44",prog:"P6",sub:"P6S1",progNombre:"Manejo de Aspectos Socioeconómicos",subNombre:"Gestión social y laboral",texto:"Gestión para uso y/o compra de terrenos",medio:"Contrato de cesión de uso / Contrato de compra y venta de tierras",resp:"RESIDENTE DE OBRA"},{id:"c45",prog:"P7",sub:"P7S1",progNombre:"Seguimiento, Monitoreo y Control",subNombre:"Monitoreo de calidad de aire",texto:"Informe de monitoreo de calidad de aire",medio:"Informes de ensayo / Certificado INACAL / Cadenas custodia / Fichas técnicas / Fotos / Planos",resp:"ING. SSOMA / SUPERVISOR AMBIENTAL"},{id:"c46",prog:"P7",sub:"P7S2",progNombre:"Seguimiento, Monitoreo y Control",subNombre:"Monitoreo de ruido ambiental",texto:"Informe de monitoreo de ruido ambiental",medio:"Informe de monitoreo",resp:"ING. SSOMA / SUPERVISOR AMBIENTAL"},{id:"c47",prog:"P8",sub:"P8S1",progNombre:"Plan de Contingencia",subNombre:"Capacitación y brigadas",texto:"Capacitaciones de combate de incendios, rescate en espacios confinados, primeros auxilios",medio:"Registro de capacitaciones",resp:"ING. SSOMA"},{id:"c48",prog:"P8",sub:"P8S1",progNombre:"Plan de Contingencia",subNombre:"Capacitación y brigadas",texto:"Conformación de brigadas de emergencia",medio:"Brigada de emergencia",resp:"ING. SSOMA"},{id:"c49",prog:"P9",sub:"P9S1",progNombre:"Plan de Abandono",subNombre:"Abandono constructivo",texto:"Registro fotográfico de orden y limpieza del área intervenida al culminar la obra",medio:"Informe de abandono constructivo",resp:"ING. SSOMA / SUPERVISOR AMBIENTAL"},{id:"m01",prog:"MC1",sub:"MC1S1",progNombre:"MC-001: Control de Polvo y Gases",subNombre:"Control de calidad de aire",texto:"a. Informe de monitoreo de calidad ambiental de aire",medio:"Informe de monitoreo",resp:"ING. SSOMA"},{id:"m02",prog:"MC1",sub:"MC1S1",progNombre:"MC-001: Control de Polvo y Gases",subNombre:"Control de calidad de aire",texto:"b. Manual de procedimientos para control de polvo y emisiones fugitivas",medio:"Manual",resp:"SUPERVISOR AMBIENTAL"},{id:"m03",prog:"MC1",sub:"MC1S1",progNombre:"MC-001: Control de Polvo y Gases",subNombre:"Control de calidad de aire",texto:"c. Lista de verificación del Manual de polvo y gases",medio:"Formato",resp:"ING. SSOMA"},{id:"m04",prog:"MC1",sub:"MC1S1",progNombre:"MC-001: Control de Polvo y Gases",subNombre:"Control de calidad de aire",texto:"d. Certificados de inspección vehicular",medio:"Documentos de los vehículos",resp:"ING. SSOMA"},{id:"m05",prog:"MC2",sub:"MC2S1",progNombre:"MC-002: Control Calidad Acústica",subNombre:"Control del ruido",texto:"a. Manual de procedimientos y sanciones para disminución del ruido",medio:"Manual",resp:"SUPERVISOR AMBIENTAL"},{id:"m06",prog:"MC2",sub:"MC2S1",progNombre:"MC-002: Control Calidad Acústica",subNombre:"Control del ruido",texto:"b. Lista de verificación del Manual de ruido",medio:"Formato",resp:"ING. SSOMA"},{id:"m07",prog:"MC2",sub:"MC2S1",progNombre:"MC-002: Control Calidad Acústica",subNombre:"Control del ruido",texto:"c. Registros de socialización del Manual con personal",medio:"Formato",resp:"ING. SSOMA"},{id:"m08",prog:"MC2",sub:"MC2S1",progNombre:"MC-002: Control Calidad Acústica",subNombre:"Control del ruido",texto:"d. Informe de monitoreo de calidad ambiental de ruido",medio:"Informe de monitoreo",resp:"ING. SSOMA"},{id:"m09",prog:"MC3",sub:"MC3S1",progNombre:"MC-004: Control de Procesos Erosivos",subNombre:"Revegetación y control erosivo",texto:"a. Reporte de cuantificación de áreas revegetadas",medio:"Informe de revegetación",resp:"ING. SSOMA"},{id:"m10",prog:"MC4",sub:"MC4S1",progNombre:"MC-007: Sustancias Peligrosas",subNombre:"Almacenamiento y suministro",texto:"a. Bitácoras con integración de actividades de EDE y contratistas",medio:"Registro de actividades",resp:"ADMINISTRACION"},{id:"m11",prog:"MC4",sub:"MC4S1",progNombre:"MC-007: Sustancias Peligrosas",subNombre:"Almacenamiento y suministro",texto:"b. Reportes de incidentes de derrame de sustancias químicas",medio:"Formato",resp:"ING. SSOMA"},{id:"m12",prog:"MC5",sub:"MC5S1",progNombre:"MC-008: Señalización EHS",subNombre:"Señalización de áreas",texto:"a. Registros de implementación de señalización EHS",medio:"Formato",resp:"SUPERVISOR AMBIENTAL"},{id:"m13",prog:"MC5",sub:"MC5S1",progNombre:"MC-008: Señalización EHS",subNombre:"Señalización de áreas",texto:"b. Registro de delimitación y señalización de áreas de trabajo",medio:"Panel fotográfico",resp:"ING. SSOMA"},{id:"m14",prog:"MC6",sub:"MC6S1",progNombre:"MC-010: Sensibilización Ambiental",subNombre:"Capacitación ambiental",texto:"a. Registro de capacitaciones sobre sensibilización ambiental",medio:"Registro",resp:"ING. SSOMA"},{id:"m15",prog:"MC6",sub:"MC6S1",progNombre:"MC-010: Sensibilización Ambiental",subNombre:"Capacitación ambiental",texto:"b. Programa anual de capacitaciones",medio:"Programa",resp:"ING. SSOMA"},{id:"m16",prog:"MC7",sub:"MC7S1",progNombre:"MC-011: Supervisión Especializada",subNombre:"Supervisión y reportes",texto:"a. Bitácoras de ejecución de actividades EDE y contratistas",medio:"Registro de actividades",resp:"ADMINISTRACION"},{id:"m17",prog:"MC7",sub:"MC7S1",progNombre:"MC-011: Supervisión Especializada",subNombre:"Supervisión y reportes",texto:"b. Registro de incidentes, accidentes y enfermedades ocupacionales",medio:"Registro",resp:"ING. SSOMA"},{id:"m18",prog:"MC7",sub:"MC7S1",progNombre:"MC-011: Supervisión Especializada",subNombre:"Supervisión y reportes",texto:"c. Informes mensuales de los contratistas",medio:"Informe",resp:"ING. SSOMA"},{id:"m19",prog:"MC8",sub:"MC8S1",progNombre:"MC-018: Información y Comunicación",subNombre:"Comunicación con partes interesadas",texto:"a. Reporte de identificación de localidades afectadas por corte eléctrico",medio:"Reporte",resp:"RESIDENTE DE OBRA"},{id:"m20",prog:"MC8",sub:"MC8S1",progNombre:"MC-018: Información y Comunicación",subNombre:"Comunicación con partes interesadas",texto:"d. Reporte de gestión de quejas recibidas",medio:"Reporte de quejas",resp:"ING. SSOMA"},{id:"m21",prog:"MC8",sub:"MC8S1",progNombre:"MC-018: Información y Comunicación",subNombre:"Comunicación con partes interesadas",texto:"e. Base de datos de quejas, reclamos y consultas",medio:"Formato (buzón de sugerencia)",resp:"ING. SSOMA"},{id:"m22",prog:"MC9",sub:"MC9S1",progNombre:"MC-019: Gestión Laboral",subNombre:"Gestión de trabajadores",texto:"a. Evidencia de recepción de la Política de contratación de trabajadores",medio:"Registro",resp:"ING. SSOMA"},{id:"m23",prog:"MC9",sub:"MC9S1",progNombre:"MC-019: Gestión Laboral",subNombre:"Gestión de trabajadores",texto:"c/d. Reportes y base de datos de quejas y reclamos de trabajadores",medio:"Reporte de quejas",resp:"ING. SSOMA"},{id:"m24",prog:"MC9",sub:"MC9S1",progNombre:"MC-019: Gestión Laboral",subNombre:"Gestión de trabajadores",texto:"f. Capacitaciones en seguridad ocupacional y código de ética Distriluz",medio:"Registro de capacitaciones y fotografías",resp:"ING. SSOMA"},{id:"m25",prog:"MC10",sub:"MC10S1",progNombre:"MC-021: Seguridad en la Comunidad",subNombre:"Convivencia y seguridad comunitaria",texto:"a. Capacitaciones al personal sobre seguridad comunitaria",medio:"Registro de capacitaciones y fotografías",resp:"ING. SSOMA"},{id:"m26",prog:"MC10",sub:"MC10S1",progNombre:"MC-021: Seguridad en la Comunidad",subNombre:"Convivencia y seguridad comunitaria",texto:"d. Reporte de inspecciones inopinadas al cumplimiento de medidas",medio:"Registro de inspecciones",resp:"SUPERVISOR AMBIENTAL"},{id:"m27",prog:"MC11",sub:"MC11S1",progNombre:"MC-024: Protección de Cuerpos de Agua",subNombre:"Protección hídrica",texto:"a. Reporte de incidentes ambientales en cuerpos de agua",medio:"Reporte de incidentes",resp:"ING. SSOMA"},{id:"m28",prog:"MC11",sub:"MC11S1",progNombre:"MC-024: Protección de Cuerpos de Agua",subNombre:"Protección hídrica",texto:"b. Registros fotográficos de la zona de cuerpos de agua",medio:"Registro fotográfico de la zona",resp:"ING. SSOMA"},{id:"m29",prog:"MC12",sub:"MC12S1",progNombre:"MC-025: Servidumbre y Uso de Tierra",subNombre:"Gestión de servidumbre",texto:"a. Reporte de comunicaciones a propietarios y posesionarios",medio:"Títulos de la propiedad / Informe de sustento",resp:"RESIDENTE DE OBRA"},{id:"m30",prog:"MC12",sub:"MC12S1",progNombre:"MC-025: Servidumbre y Uso de Tierra",subNombre:"Gestión de servidumbre",texto:"b/c. Reportes mensuales de comunicaciones con propietarios y posesionarios",medio:"Reporte mensual de comunicaciones",resp:"RESIDENTE DE OBRA"}];
+
+const PROGS=[{id:"todos",label:"Todos los programas",hoja:""},{id:"P1",label:"P1 — Prevención y Mitigación",hoja:"Ambiental"},{id:"P2",label:"P2 — Flora y Fauna",hoja:"Ambiental"},{id:"P3",label:"P3 — Residuos Sólidos",hoja:"Ambiental"},{id:"P4",label:"P4 — Revegetación",hoja:"Ambiental"},{id:"P5",label:"P5 — Salud y Seguridad",hoja:"Ambiental"},{id:"P6",label:"P6 — Socioeconómico",hoja:"Ambiental"},{id:"P7",label:"P7 — Monitoreo",hoja:"Ambiental"},{id:"P8",label:"P8 — Contingencia",hoja:"Ambiental"},{id:"P9",label:"P9 — Abandono",hoja:"Ambiental"},{id:"MC1",label:"MC-001 — Polvo y Gases",hoja:"PIT"},{id:"MC2",label:"MC-002 — Ruido",hoja:"PIT"},{id:"MC3",label:"MC-004 — Erosión",hoja:"PIT"},{id:"MC4",label:"MC-007 — Sust. Peligrosas",hoja:"PIT"},{id:"MC5",label:"MC-008 — Señalización EHS",hoja:"PIT"},{id:"MC6",label:"MC-010 — Sensibilización",hoja:"PIT"},{id:"MC7",label:"MC-011 — Supervisión",hoja:"PIT"},{id:"MC8",label:"MC-018 — Comunicación",hoja:"PIT"},{id:"MC9",label:"MC-019 — Gestión Laboral",hoja:"PIT"},{id:"MC10",label:"MC-021 — Seg. Comunitaria",hoja:"PIT"},{id:"MC11",label:"MC-024 — Cuerpos de Agua",hoja:"PIT"},{id:"MC12",label:"MC-025 — Servidumbre",hoja:"PIT"}];
+
+function Chip({estado}){
+  const L={"Cumplido al 100%":"✓ Cumplido","Cumplido parcialmente":"◑ Parcial","No aplica este período":"— No aplica","No corresponde":"✕ No corresponde","Pendiente":"○ Pendiente"};
+  const c=ECFG[estado]||ECFG["Pendiente"];
+  return <span className={`chip ${c.chip}`}>{L[estado]||estado}</span>;
+}
+
+function Modal({comp,periodo,actividad,subActividad,existing,onClose,onSave}){
+  const [ssoma,setSsoma]=useState(existing?.ssoma||"");
+  const [estado,setEstado]=useState(existing?.estado||"Cumplido al 100%");
+  const [notas,setNotas]=useState(existing?.notas||"");
+  const [sustento,setSustento]=useState(existing?.sustento||"");
+  const [files,setFiles]=useState(existing?.files||[]);
+  const [drag,setDrag]=useState(false);
+  const [saving,setSaving]=useState(false);
+  const needsSustento=estado==="No corresponde";
+  const needsFiles=estado!=="No corresponde"&&estado!=="No aplica este período";
+  const addFiles=fs=>setFiles(p=>[...p,...Array.from(fs).map(f=>({id:uid(),name:f.name,type:f.type,size:f.size,preview:f.type.startsWith("image")?URL.createObjectURL(f):null}))]);
+  const save=async()=>{
+    if(!ssoma.trim()){alert("Ingresa el nombre del responsable SSOMA");return;}
+    if(needsSustento&&!sustento.trim()){alert("El sustento técnico es obligatorio");return;}
+    if(needsFiles&&!files.length){alert("Adjunta al menos un archivo de evidencia");return;}
+    setSaving(true);await new Promise(r=>setTimeout(r,450));
+    onSave({id:existing?.id||uid(),compromisoId:comp.id,periodo,actividad,subActividad,ssoma:ssoma.trim(),estado,notas,sustento,files,fecha:Date.now()},comp);
+    setSaving(false);onClose();
+  };
+  const actLabel=actividad?ACTIVIDADES.find(a=>a.id===actividad)?.label:"";
+  const subLabel=subActividad?ACTIVIDADES.find(a=>a.id==="CIV")?.subs.find(s=>s.id===subActividad)?.label:"";
+  const cfg=ECFG[estado]||ECFG["Pendiente"];
+  return(
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal-box">
+        <div className="m-hdr">
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10,marginBottom:8}}>
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:600,color:"var(--txt)",lineHeight:1.4,marginBottom:2}}>{comp.texto}</div>
+              <div style={{fontSize:11,color:"var(--txt-s)",fontWeight:500}}>{comp.progNombre}</div>
+            </div>
+            <button onClick={onClose} style={{background:"none",border:"1.5px solid var(--slate-d)",cursor:"pointer",color:"var(--mist)",fontSize:16,borderRadius:"50%",width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontWeight:700}}>✕</button>
+          </div>
+          {actLabel&&<div style={{background:"var(--navy-m)",border:"1px solid var(--navy-l)",borderRadius:"var(--r1)",padding:"6px 11px",fontSize:11,color:"rgba(255,255,255,.85)",display:"flex",alignItems:"center",gap:6,fontWeight:600,marginBottom:9,fontFamily:"'Rajdhani',sans-serif",letterSpacing:".3px"}}>⚙ {actLabel}{subLabel&&<span style={{opacity:.7}}> › {subLabel}</span>}</div>}
+          <div className="info-strip"><div className="info-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>{[{l:"Medio de verificación",v:comp.medio},{l:"Frecuencia",v:"Mensual"},{l:"Responsable",v:comp.resp}].map(f=><div key={f.l}><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:9,fontWeight:700,color:"var(--mist)",letterSpacing:.9,textTransform:"uppercase",marginBottom:2}}>{f.l}</div><div style={{fontSize:11,color:"var(--txt-m)",lineHeight:1.4,fontWeight:500}}>{f.v}</div></div>)}</div></div>
+        </div>
+        <div className="m-body">
+          <div className="mfg" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div><label className="flbl">Período</label><div style={{background:"var(--cyan-bg)",border:"1.5px solid rgba(30,144,212,.25)",borderRadius:"var(--r2)",padding:"9px 13px",fontSize:13,color:"var(--cyan)",fontWeight:700,fontFamily:"'Rajdhani',sans-serif",letterSpacing:".3px"}}>{periodo}</div></div>
+            <div><label className="flbl">Responsable SSOMA *</label><input className="inp" value={ssoma} onChange={e=>setSsoma(e.target.value)} placeholder="Nombre completo"/></div>
+          </div>
+          <div><label className="flbl">Estado de cumplimiento *</label><select className="inp sel" value={estado} onChange={e=>setEstado(e.target.value)} style={{color:cfg.circle,fontWeight:700}}>{ESTADOS.map(s=><option key={s}>{s}</option>)}</select></div>
+          {needsSustento&&<div><div className="warn-box" style={{marginBottom:10}}><span>⚠️</span><span>La opción <strong>"No corresponde"</strong> requiere sustento técnico. <strong>Obligatorio</strong>.</span></div><label className="flbl" style={{color:"var(--violet)"}}>Sustento técnico *</label><textarea className="inp" value={sustento} onChange={e=>setSustento(e.target.value)} rows={3} placeholder="Describa el motivo..." style={{resize:"vertical",minHeight:80,lineHeight:1.5,borderColor:sustento?"var(--slate-d)":"var(--violet)"}}/></div>}
+          {!needsSustento&&<div><label className="flbl">Evidencia adjunta {needsFiles?"*":"(opcional)"}</label><div className={`upload-zone${drag?" drag":""}`} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);addFiles(e.dataTransfer.files);}} onClick={()=>{const i=document.createElement("input");i.type="file";i.multiple=true;i.accept="image/*,.pdf,.docx,.xlsx";i.onchange=e=>addFiles(e.target.files);i.click();}}><div style={{fontSize:30,marginBottom:6}}>📁</div><div style={{fontSize:14,color:"var(--cyan)",fontWeight:700,marginBottom:2,fontFamily:"'Rajdhani',sans-serif",letterSpacing:".3px"}}>TOCA PARA SELECCIONAR</div><div style={{fontSize:11,color:"var(--mist)"}}>Fotos de obra · PDF · Word · Excel</div></div></div>}
+          {files.length>0&&<div style={{display:"flex",flexWrap:"wrap",gap:6}}>{files.map(f=><div key={f.id} style={{display:"flex",alignItems:"center",gap:7,background:"var(--cyan-xl)",border:"1px solid rgba(30,144,212,.2)",borderRadius:"var(--r2)",padding:"7px 10px",maxWidth:"calc(100% - 12px)"}}>{f.preview?<img src={f.preview} style={{width:32,height:32,objectFit:"cover",borderRadius:4}} alt=""/>:<span style={{fontSize:22}}>{fileIcon(f.type)}</span>}<div style={{flex:1,minWidth:0}}><div style={{fontSize:11,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{f.name}</div><div style={{fontSize:10,color:"var(--mist)"}}>{fileSz(f.size)}</div></div><button onClick={()=>setFiles(p=>p.filter(x=>x.id!==f.id))} style={{background:"none",border:"none",cursor:"pointer",color:"var(--red)",fontSize:16,padding:"4px 6px",minWidth:30,minHeight:30}}>✕</button></div>)}</div>}
+          <div><label className="flbl">Observaciones</label><textarea className="inp" value={notas} onChange={e=>setNotas(e.target.value)} rows={2} placeholder="Comentarios adicionales..." style={{resize:"vertical",minHeight:54,lineHeight:1.5}}/></div>
+          <div style={{display:"flex",gap:8,paddingTop:2}}>
+            <button className="btn btn-ghost" onClick={onClose} style={{flex:1}}>Cancelar</button>
+            <button className="btn btn-primary" onClick={save} disabled={saving} style={{flex:2}}>{saving?"Guardando…":"💾  Guardar evidencia"}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CommitCard({c,regs,aggStatus,periodo,onAdd,onEdit,onDelete,onNoAplica}){
+  const [open,setOpen]=useState(false);
+  const [naMode,setNaMode]=useState(false);
+  const [naTexto,setNaTexto]=useState("");
+  const [naSaving,setNaSaving]=useState(false);
+  const [delConfirm,setDelConfirm]=useState(null);
+  const cfg=aggStatus?(ECFG[aggStatus]||ECFG["Pendiente"]):null;
+  const count=regs.length;
+  const saveNA=async()=>{if(!naTexto.trim()){alert("Ingresa el sustento");return;}setNaSaving(true);await new Promise(r=>setTimeout(r,400));onNoAplica(c,naTexto.trim());setNaMode(false);setNaTexto("");setNaSaving(false);};
+  const SBox=({texto,color,bg,border,label})=><div style={{background:bg,border:`1px solid ${border}`,borderRadius:"var(--r2)",padding:"9px 12px",marginBottom:8,fontSize:12,color,lineHeight:1.6}}><div style={{fontFamily:"'Rajdhani',sans-serif",fontWeight:700,fontSize:9,textTransform:"uppercase",letterSpacing:1,marginBottom:3,opacity:.75}}>{label}</div>{texto}</div>;
+  return(
+    <div className={`commit-card${cfg?" "+cfg.cls:""}`}>
+      <div className="card-hdr" onClick={()=>{setOpen(o=>!o);if(naMode)setNaMode(false);}}>
+        <div className="status-orb" style={{borderColor:cfg?.circle||"var(--slate-d)",background:cfg?.circleBg||"var(--white)",color:cfg?.circle||"var(--fog)"}}>{cfg?.sign||""}</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:13,fontWeight:600,color:"var(--txt)",lineHeight:1.4,marginBottom:5}}>{c.texto}</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:5,alignItems:"center"}}>
+            <span style={{fontSize:10,color:"var(--txt-s)",background:"var(--slate)",border:"1px solid var(--slate-m)",padding:"2px 8px",borderRadius:4,maxWidth:185,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",display:"block",fontFamily:"'Rajdhani',sans-serif",fontWeight:600}}>{c.medio.length>42?c.medio.slice(0,42)+"…":c.medio}</span>
+            <span style={{fontSize:10,color:"var(--cyan)",background:"var(--cyan-bg)",border:"1px solid rgba(30,144,212,.2)",padding:"2px 7px",borderRadius:4,fontWeight:700,fontFamily:"'Rajdhani',sans-serif"}}>MENSUAL</span>
+            <span style={{fontSize:10,color:"var(--txt-m)",fontWeight:700,fontFamily:"'Rajdhani',sans-serif"}}>{c.resp}</span>
+          </div>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}}>
+          {aggStatus&&<Chip estado={aggStatus}/>}
+          {count>0&&<span style={{fontSize:10,color:"var(--cyan)",background:"var(--cyan-bg)",padding:"2px 7px",borderRadius:4,fontWeight:700,fontFamily:"'Rajdhani',sans-serif"}}>{count} ENV{count!==1?"ÍOS":"ÍO"}</span>}
+          <span style={{fontSize:12,color:"var(--mist)",fontWeight:700}}>{open?"▾":"▸"}</span>
+        </div>
+      </div>
+      {open&&(
+        <div className="card-body anim-sd">
+          {count>0&&(
+            <div style={{marginBottom:12}}>
+              <div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:9,fontWeight:700,color:"var(--cyan)",textTransform:"uppercase",letterSpacing:1,marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span>Envíos — {periodo}</span><span style={{background:"var(--cyan-bg)",color:"var(--cyan)",padding:"1px 7px",borderRadius:4,border:"1px solid rgba(30,144,212,.2)"}}>{count}</span>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:7}}>
+                {regs.map((reg,i)=>(
+                  <div key={reg.id} className="ev-rec" style={{borderColor:delConfirm===reg.id?"var(--red-l)":"var(--slate-m)"}}>
+                    {delConfirm===reg.id&&(
+                      <div style={{position:"absolute",inset:0,background:"rgba(255,255,255,.97)",borderRadius:"var(--r2)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,zIndex:5,padding:12}}>
+                        <div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:13,fontWeight:700,color:"var(--red)",textAlign:"center",letterSpacing:".3px"}}>¿ELIMINAR ESTE ENVÍO?</div>
+                        <div style={{fontSize:11,color:"var(--mist)",textAlign:"center",marginBottom:4}}>{reg.ssoma} · {fmtDate(reg.fecha)}</div>
+                        <div style={{display:"flex",gap:8}}>
+                          <button onClick={()=>setDelConfirm(null)} style={{background:"var(--slate)",border:"1.5px solid var(--slate-d)",color:"var(--txt-m)",borderRadius:"var(--r1)",padding:"6px 14px",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:600}}>Cancelar</button>
+                          <button onClick={()=>{onDelete(reg.id);setDelConfirm(null);}} style={{background:"var(--red)",border:"none",color:"#fff",borderRadius:"var(--r1)",padding:"6px 14px",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:700}}>Sí, eliminar</button>
+                        </div>
+                      </div>
+                    )}
+                    <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8,marginBottom:7}}>
+                      <div style={{display:"flex",alignItems:"center",gap:7}}><span style={{fontFamily:"'Rajdhani',sans-serif",fontSize:9,fontWeight:700,color:"var(--mist)",background:"var(--slate)",borderRadius:3,padding:"2px 6px"}}>#{i+1}</span><Chip estado={reg.estado}/></div>
+                      <div style={{display:"flex",gap:5,flexShrink:0}}>
+                        <button onClick={()=>onEdit(c,reg)} style={{background:"none",border:"1px solid var(--slate-d)",borderRadius:"var(--r1)",cursor:"pointer",padding:"4px 8px",fontSize:11,color:"var(--txt-m)",fontFamily:"inherit"}}>✏️</button>
+                        <button onClick={()=>setDelConfirm(reg.id)} style={{background:"none",border:"1px solid var(--red-l)",borderRadius:"var(--r1)",cursor:"pointer",padding:"4px 8px",fontSize:11,color:"var(--red)",fontFamily:"inherit"}}>🗑️</button>
+                      </div>
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:7}}>
+                      {[{l:"Responsable",v:reg.ssoma},{l:"Fecha",v:fmtDate(reg.fecha)}].map(f=><div key={f.l}><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:9,color:"var(--mist)",textTransform:"uppercase",letterSpacing:.8,marginBottom:1}}>{f.l}</div><div style={{fontSize:11,color:"var(--txt-m)",fontWeight:600}}>{f.v}</div></div>)}
+                    </div>
+                    {reg.estado==="No aplica este período"&&reg.sustento&&<SBox texto={reg.sustento} color="#065F46" bg="var(--green-bg)" border="var(--green-l)" label="Sustento — No aplica este mes"/>}
+                    {reg.estado==="No corresponde"&&reg.sustento&&<SBox texto={reg.sustento} color="var(--violet)" bg="var(--violet-bg)" border="#C4B5FD" label="Sustento técnico — No corresponde"/>}
+                    {reg.notas&&<div style={{fontSize:11,color:"var(--txt-m)",background:"var(--slate)",borderRadius:"var(--r1)",padding:"6px 9px",marginBottom:7,lineHeight:1.5}}>{reg.notas}</div>}
+                    {reg.files?.length>0&&<div><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:9,color:"var(--mist)",textTransform:"uppercase",letterSpacing:.8,marginBottom:5}}>Archivos ({reg.files.length})</div><div style={{display:"flex",flexWrap:"wrap",gap:4}}>{reg.files.map(f=><div key={f.id} className="file-chip"><span style={{fontSize:13}}>{fileIcon(f.type)}</span><span style={{color:"var(--txt-m)",maxWidth:120,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{f.name}</span><span style={{color:"var(--mist)"}}>{fileSz(f.size)}</span></div>)}</div></div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {!naMode?(
+            <div>
+              {count===0&&<div style={{fontSize:12,color:"var(--mist)",textAlign:"center",marginBottom:12,fontStyle:"italic"}}>Sin evidencia registrada para {periodo}</div>}
+              <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:count===0?"center":"flex-start"}}>
+                <button className="btn btn-primary btn-sm" style={{gap:6,minWidth:155}} onClick={()=>onAdd(c)}>⬆ {count>0?"Agregar envío":"Subir evidencia"}</button>
+                {!regs.some(r=>r.estado==="No aplica este período")&&<button onClick={()=>setNaMode(true)} style={{minWidth:155,minHeight:36,padding:"0 14px",borderRadius:"var(--r1)",border:"1.5px solid var(--green-l)",background:"var(--green-bg)",color:"#065F46",fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:12,cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6}}>🚫 No aplica este mes</button>}
+              </div>
+            </div>
+          ):(
+            <div className="anim-sd">
+              <div style={{background:"var(--green-bg)",border:"1.5px solid var(--green-l)",borderRadius:"var(--r2)",padding:"10px 13px",marginBottom:12,display:"flex",gap:9,alignItems:"flex-start"}}><span style={{fontSize:16,flexShrink:0}}>🚫</span><div><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:12,fontWeight:700,color:"#065F46",marginBottom:2}}>NO APLICA ESTE MES — {periodo}</div><div style={{fontSize:11,color:"#047857",lineHeight:1.5}}>Ingresa el sustento que justifica por qué este compromiso <strong>no aplica</strong>.</div></div></div>
+              <div style={{marginBottom:10}}><label style={{fontFamily:"'Rajdhani',sans-serif",fontSize:10,fontWeight:700,color:"#065F46",letterSpacing:1,textTransform:"uppercase",display:"block",marginBottom:5}}>Sustento / motivo *</label><textarea className="inp" value={naTexto} onChange={e=>setNaTexto(e.target.value)} rows={3} autoFocus placeholder="Ej: La actividad de movilización aún no ha iniciado en obra..." style={{resize:"vertical",minHeight:88,lineHeight:1.6,borderColor:naTexto?"var(--green-l)":"#34D399",fontSize:13}}/><div style={{fontSize:10,color:"var(--mist)",marginTop:3}}>{naTexto.length} caracteres</div></div>
+              <div style={{display:"flex",gap:8}}>
+                <button className="btn btn-ghost btn-sm" onClick={()=>{setNaMode(false);setNaTexto("");}} style={{flex:1}}>Cancelar</button>
+                <button className="btn btn-lime btn-sm" disabled={naSaving||!naTexto.trim()} onClick={saveNA} style={{flex:2}}>{naSaving?"Guardando…":"✓ Guardar — No aplica"}</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SidebarContent({progSel,setProgSel,periodo,setPeriodo,registros,onClose}){
+  const progCount=pid=>{const items=pid==="todos"?COMPROMISOS:COMPROMISOS.filter(c=>c.prog===pid);const done=items.filter(comp=>registros.some(r=>r.compromisoId===comp.id&&r.periodo===periodo&&r.estado==="Cumplido al 100%")).length;return{t:items.length,d:done};};
+  const total=COMPROMISOS.length;
+  const done=registros.filter(r=>r.periodo===periodo&&r.estado==="Cumplido al 100%").length;
+  const pct=total?Math.round(done/total*100):0;
+  const pctColor=pct===100?"var(--green)":pct>=60?"var(--cyan)":pct>=30?"var(--amber)":"var(--red)";
+  return(
+    <>
+      <div className="sb-logo"><img src={LOGO} alt="C.MEJIA S.A.C."/></div>
+      <div className="sb-project"><div className="p-tag">Sistema SSOMA · C.MEJIA</div><div className="p-name">Compromisos Ambientales</div><div><span className="p-badge">🏗 Proyecto Pachachaca</span></div></div>
+      <div className="sb-period"><span className="sb-period-lbl">📅  Período de reporte</span><select className="period-sel" value={periodo} onChange={e=>setPeriodo(e.target.value)}>{MESES.map(m=><option key={m}>{m} 2026</option>)}</select></div>
+      <div className="sb-nav">
+        <div className="nav-grp"><span className="nav-grp-title">Hoja Ambiental</span><span className="nav-grp-badge">IGA</span></div>
+        {PROGS.filter(p=>p.hoja==="Ambiental"||p.id==="todos").map(p=>{const{t,d}=progCount(p.id);return(<button key={p.id} className={`prog-btn${progSel===p.id?" active":""}`} onClick={()=>{setProgSel(p.id);onClose&&onClose();}}><span style={{flex:1,fontSize:11.5}}>{p.label}</span>{p.id!=="todos"&&<span className="prog-badge">{d}/{t}</span>}</button>);})}
+        <div className="nav-grp" style={{marginTop:8}}><span className="nav-grp-title">Hoja PIT</span><span className="nav-grp-badge">MC</span></div>
+        {PROGS.filter(p=>p.hoja==="PIT").map(p=>{const{t,d}=progCount(p.id);return(<button key={p.id} className={`prog-btn${progSel===p.id?" active":""}`} onClick={()=>{setProgSel(p.id);onClose&&onClose();}}><span style={{flex:1,fontSize:11.5}}>{p.label}</span><span className="prog-badge">{d}/{t}</span></button>);})}
+      </div>
+      <div className="sb-footer">
+        <div className="sb-foot-row"><span className="sb-foot-lbl">Cumplimiento · {periodo}</span><span className="sb-foot-pct" style={{color:pctColor}}>{pct}<span style={{fontSize:14,opacity:.7}}>%</span></span></div>
+        <div className="prog-track"><div className="prog-fill" style={{width:pct+"%",background:pctColor}}/></div>
+        <div className="sb-foot-meta"><span>✓ {done} cumplidos</span><span>{total-done} restantes</span></div>
+      </div>
+    </>
+  );
+}
+
+function App(){
+  const [progSel,setProgSel]=useState("todos");
+  const [periodo,setPeriodo]=useState(`${MESES[new Date().getMonth()]} 2026`);
+  const [actividad,setActividad]=useState("");
+  const [subActividad,setSubActividad]=useState("");
+  const [respFiltro,setRespFiltro]=useState("Todos");
+  const [registros,setRegistros]=useState(()=>lsLoad("pac_v8",[]));
+  const [modal,setModal]=useState(null);
+  const [search,setSearch]=useState("");
+  const [spUser,setSpUser]   = useState(null);
+  const [spDrive,setSpDrive] = useState(null);
+  const [spBusy,setSpBusy]   = useState(false);
+  const [spPct,setSpPct]     = useState(0);
+  const [spMsg,setSpMsg]     = useState("");
+  const [toast,setToast]=useState(null);
+  const [drawerOpen,setDrawerOpen]=useState(false);
+  useEffect(()=>{lsSave("pac_v8",registros);},[registros]);
+  // Auto-conectar SharePoint al cargar (diferido para que MSAL esté disponible)
+  useEffect(()=>{
+    const run=async()=>{
+      try{
+        SP.spInit();
+        const acc=await SP.spConnect((status,msg)=>{
+          if(status==="ok"){}
+          else if(status==="connecting")setSpMsg(msg);
+          else if(status==="error")setSpMsg("");
+          else if(status==="cancelled")setSpMsg("");
+        });
+        if(!acc)return;
+        setSpUser(acc);
+        const token=await SP.spToken();
+        const driveId=await SP.spDriveId(token);
+        setSpDrive(driveId);
+        setSpMsg("");
+      }catch(e){
+        console.warn("SP auto-connect error:",e.message);
+        setSpMsg("");
+      }
+    };
+    // Esperar 800ms para asegurar que MSAL esté listo
+    const t=setTimeout(run,800);
+    return()=>clearTimeout(t);
+  },[]);
+  const showToast=(msg,t="ok")=>{setToast({msg,t});setTimeout(()=>setToast(null),3000);};
+  const addReg=async(reg,comp)=>{
+    setRegistros(prev=>[reg,...prev]);
+    showToast("✅  Evidencia guardada");
+    if(spDrive&&comp){
+      setSpBusy(true);setSpPct(5);setSpMsg("Subiendo a SharePoint...");
+      try{
+        await SP.spGuardar(spDrive,reg,comp,(pct,msg)=>{setSpPct(pct);setSpMsg(msg);});
+        showToast("☁  Guardado en SharePoint","ok");
+      }catch(e){
+        console.error("SP:",e);
+        showToast("SharePoint: "+e.message,"err");
+      }finally{
+        setTimeout(()=>{setSpBusy(false);setSpPct(0);setSpMsg("");},2000);
+      }
+    }
+  };
+  const updateReg=reg=>{setRegistros(prev=>prev.map(r=>r.id===reg.id?reg:r));showToast("✅  Evidencia actualizada");};
+  const deleteReg=id=>{setRegistros(prev=>prev.filter(r=>r.id!==id));showToast("🗑  Registro eliminado","err");};
+  const spExportarMes=async()=>{
+    if(!spDrive){showToast("SharePoint no conectado","err");return;}
+    setSpBusy(true);setSpPct(5);setSpMsg("Preparando informe...");
+    try{
+      await SP.spExportar(spDrive,registros,periodo,COMPROMISOS,(pct,msg)=>{setSpPct(pct);setSpMsg(msg);});
+      showToast("📊  Informe mensual en SharePoint","ok");
+    }catch(e){showToast("Error: "+e.message,"err");}
+    finally{setTimeout(()=>{setSpBusy(false);setSpPct(0);setSpMsg("");},2000);}
+  };
+  const handleNoAplica=(comp,sustento)=>{addReg({id:uid(),compromisoId:comp.id,periodo,actividad,subActividad,ssoma:"— No aplica —",estado:"No aplica este período",sustento,notas:"",files:[],fecha:Date.now()});showToast("🚫  Registrado como No aplica");};
+  const getRegs=cId=>registros.filter(r=>r.compromisoId===cId&&r.periodo===periodo);
+  const getAggStatus=cId=>{const rs=getRegs(cId);if(!rs.length)return null;if(rs.some(r=>r.estado==="Cumplido al 100%"))return "Cumplido al 100%";if(rs.some(r=>r.estado==="Cumplido parcialmente"))return "Cumplido parcialmente";if(rs.some(r=>r.estado==="No corresponde"))return "No corresponde";if(rs.some(r=>r.estado==="No aplica este período"))return "No aplica este período";return "Pendiente";};
+  const actividadActual=ACTIVIDADES.find(a=>a.id===actividad);
+  const tieneSubs=actividadActual?.subs?.length>0;
+  const filtered=useMemo(()=>{let list=progSel==="todos"?COMPROMISOS:COMPROMISOS.filter(c=>c.prog===progSel);if(respFiltro!=="Todos")list=list.filter(c=>c.resp===respFiltro||c.resp.includes(respFiltro));if(search.trim())list=list.filter(c=>c.texto.toLowerCase().includes(search.toLowerCase())||c.medio.toLowerCase().includes(search.toLowerCase())||c.subNombre.toLowerCase().includes(search.toLowerCase()));return list;},[progSel,search,respFiltro]);
+  const total=filtered.length;
+  const aggSts=filtered.map(c=>getAggStatus(c.id));
+  const cumplidos=aggSts.filter(s=>s==="Cumplido al 100%").length;
+  const parciales=aggSts.filter(s=>s==="Cumplido parcialmente").length;
+  const noaplica=aggSts.filter(s=>s==="No aplica este período").length;
+  const nocorr=aggSts.filter(s=>s==="No corresponde").length;
+  const pendientes=total-cumplidos-parciales-noaplica-nocorr;
+  const pct=total?Math.round(cumplidos/total*100):0;
+  const pctColor=pct===100?"var(--green)":pct>=60?"var(--cyan)":pct>=30?"var(--amber)":"var(--red)";
+  const bySub={};filtered.forEach(c=>{if(!bySub[c.sub])bySub[c.sub]={sub:c.subNombre,items:[]};bySub[c.sub].items.push(c);});
+  const progLabel=progSel==="todos"?"Todos":PROGS.find(p=>p.id===progSel)?.label||progSel;
+  return(
+    <div className="app-shell">
+      <div className={`drawer-overlay${drawerOpen?" open":""}`} onClick={()=>setDrawerOpen(false)}/>
+      <div className={`sidebar${drawerOpen?" open":""}`}><SidebarContent progSel={progSel} setProgSel={setProgSel} periodo={periodo} setPeriodo={setPeriodo} registros={registros} onClose={()=>setDrawerOpen(false)}/></div>
+      <div className="main-area">
+        {/* TOPBAR */}
+        <div className="topbar">
+          <button className="hamburger" onClick={()=>setDrawerOpen(true)}><span/><span/><span/></button>
+          <div className="topbar-logo"><img src={LOGO} alt="C.MEJIA S.A.C."/></div>
+          <div className="search-wrap"><span style={{color:"var(--mist)",fontSize:14}}>🔍</span><input placeholder="Buscar compromiso…" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<button onClick={()=>setSearch("")} style={{background:"none",border:"none",cursor:"pointer",color:"var(--mist)",fontSize:16,padding:"0 2px",minWidth:26,minHeight:26}}>✕</button>}</div>
+          <div className="topbar-title">{progLabel}</div>
+          {spDrive&&<button disabled={spBusy} onClick={spExportarMes} title="Exportar informe mensual a SharePoint" style={{background:"none",border:"1.5px solid var(--slate-d)",borderRadius:"var(--r1)",color:"var(--txt-s)",fontFamily:"'Rajdhani',sans-serif",fontSize:11,fontWeight:700,padding:"4px 10px",cursor:"pointer",minHeight:34,whiteSpace:"nowrap",opacity:spBusy?.4:1,flexShrink:0,letterSpacing:".3px"}}>📊</button>}
+        </div>
+        {/* SP INDICATOR */}
+        {(spBusy||spMsg)&&(
+          <div style={{background:"var(--navy-m)",borderBottom:"1px solid var(--navy-l)",padding:"0 14px",height:34,display:"flex",alignItems:"center",gap:9,flexShrink:0}}>
+            <div style={{width:7,height:7,borderRadius:"50%",background:spBusy?"var(--amber)":"#34D399",flexShrink:0,animation:spBusy?"pulse .9s infinite":"none"}}/>
+            <span style={{fontFamily:"'Rajdhani',sans-serif",fontSize:10,fontWeight:700,color:"rgba(255,255,255,.7)",letterSpacing:".5px",textTransform:"uppercase",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+              {spMsg}
+            </span>
+            {spBusy&&<div style={{width:80,height:3,background:"rgba(255,255,255,.15)",borderRadius:2,overflow:"hidden",flexShrink:0}}><div style={{width:spPct+"%",height:"100%",background:"var(--cyan)",borderRadius:2,transition:"width .3s"}}/></div>}
+          </div>
+        )}
+        {/* ACTIVITY BAR */}
+        <div className="activ-bar">
+          <div className="activ-tag">⚙ Actividad</div>
+          <div className="sel-wrap">
+            <span className="sel-lbl">Frente:</span>
+            <select className={`inp sel${actividad?" has-value":""}`} value={actividad} onChange={e=>{setActividad(e.target.value);setSubActividad("");}}>
+              <option value="">Seleccionar actividad actual…</option>
+              {ACTIVIDADES.map(a=><option key={a.id} value={a.id}>{a.label}</option>)}
+            </select>
+          </div>
+          {tieneSubs&&(
+            <div className="sel-wrap">
+              <span className="sel-lbl">Sub:</span>
+              <select className={`inp sel${subActividad?" has-value":""}`} value={subActividad} onChange={e=>setSubActividad(e.target.value)}>
+                <option value="">Sub-actividad…</option>
+                {actividadActual.subs.map(s=><option key={s.id} value={s.id}>{s.label}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
+        {/* FILTER BAR */}
+        <div className="filter-bar">
+          <div style={{display:"flex",alignItems:"center",gap:7,flex:1,minWidth:170}} className="resp-filter">
+            <span style={{fontFamily:"'Rajdhani',sans-serif",fontSize:11,fontWeight:700,color:"var(--cyan)",whiteSpace:"nowrap",flexShrink:0,letterSpacing:".5px",textTransform:"uppercase"}}>👤 Responsable</span>
+            <select className="inp sel" value={respFiltro} onChange={e=>setRespFiltro(e.target.value)} style={{fontSize:12,padding:"6px 30px 6px 10px",borderRadius:"var(--r1)",flex:1,color:"var(--txt)",fontWeight:600}}>{RESPONSABLES.map(r=><option key={r}>{r}</option>)}</select>
+          </div>
+          <div style={{display:"flex",gap:5,flexShrink:0}}>
+            {[{l:"Cumplidos",v:cumplidos,bg:"var(--green-bg)",c:"var(--green)",b:"var(--green-l)"},{l:"Parciales",v:parciales,bg:"var(--red-bg)",c:"var(--red)",b:"var(--red-l)"},{l:"No corresp.",v:nocorr,bg:"var(--violet-bg)",c:"var(--violet)",b:"#C4B5FD"},{l:"Pendientes",v:pendientes,bg:"var(--amber-bg)",c:"var(--amber)",b:"#FDE68A"}].map(k=>(
+              <div key={k.l} className="stat-pill" style={{background:k.bg,borderColor:k.b}}>
+                <div className="stat-num" style={{color:k.c}}>{k.v}</div>
+                <div className="stat-lbl" style={{color:k.c}}>{k.l}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:11,fontWeight:700,color:"var(--mist)",background:"var(--slate)",border:"1px solid var(--slate-m)",padding:"5px 10px",borderRadius:"var(--r1)",whiteSpace:"nowrap",flexShrink:0,letterSpacing:".5px"}}>{total} COMPROMISOS</div>
+        </div>
+        {/* CONTENT */}
+        <div className="content-area">
+          {Object.entries(bySub).map(([subId,{sub,items}])=>(
+            <div key={subId} style={{marginBottom:20}}>
+              <div className="sub-hdr"><div className="sub-title">{sub}</div><div className="sub-line"/><span className="sub-count">{items.length} compromisos</span></div>
+              {items.map(c=><CommitCard key={c.id} c={c} regs={getRegs(c.id)} aggStatus={getAggStatus(c.id)} periodo={periodo} onAdd={(comp)=>setModal({comp,reg:null,mode:"add"})} onEdit={(comp,reg)=>setModal({comp,reg,mode:"edit"})} onDelete={deleteReg} onNoAplica={handleNoAplica}/>)}
+            </div>
+          ))}
+          {filtered.length===0&&<div style={{textAlign:"center",padding:"52px 20px",color:"var(--mist)"}}><div style={{fontSize:46,marginBottom:14,opacity:.5}}>🔍</div><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:17,fontWeight:700,color:"var(--txt-m)",marginBottom:5,letterSpacing:".5px"}}>SIN RESULTADOS</div><div style={{fontSize:13}}>{search?"Prueba con otro término":"Selecciona un programa en el menú lateral"}</div></div>}
+        </div>
+      </div>
+      {/* BOTTOM NAV */}
+      <div className="bottom-nav">
+        <div className="bnav-inner">
+          <button className="bnav-btn" onClick={()=>setDrawerOpen(true)}><span className="bnav-icon">☰</span><span>Programas</span></button>
+          <button className="bnav-btn active"><span className="bnav-icon">📋</span><span>Compromisos</span></button>
+          <div className="bnav-fab-wrap"><button className="bnav-fab" onClick={()=>{const c=COMPROMISOS.find(x=>!getAggStatus(x.id));if(c)setModal({comp:c,reg:null,mode:"add"});}}>⬆</button><span style={{fontFamily:"'Rajdhani',sans-serif",fontSize:9,fontWeight:700,color:"var(--cyan)",letterSpacing:".5px"}}>SUBIR</span></div>
+          <button className="bnav-btn" onClick={()=>{const val=respFiltro==="Todos"?"ING. SSOMA":"Todos";setRespFiltro(val);}}><span className="bnav-icon">👤</span><span>{respFiltro==="Todos"?"Responsable":"Mis tareas"}</span></button>
+          <button className="bnav-btn"><span style={{fontFamily:"'Rajdhani',sans-serif",fontSize:17,fontWeight:700,color:pctColor,lineHeight:1}}>{pct}%</span><span>Avance</span></button>
+        </div>
+      </div>
+      {modal&&<Modal comp={modal.comp} periodo={periodo} actividad={actividad} subActividad={subActividad} existing={modal.mode==="edit"?modal.reg:null} onClose={()=>setModal(null)} onSave={modal.mode==="edit"?updateReg:addReg}/>}
+      {toast&&<div className="toast" style={{background:toast.t==="ok"?"var(--green)":"var(--red)",color:"#fff"}}>{toast.msg}</div>}
+    </div>
+  );
+}
+ReactDOM.render(<App/>, document.getElementById("root"));
+</script>
+</body>
+</html>
