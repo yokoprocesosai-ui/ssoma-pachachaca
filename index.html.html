@@ -290,8 +290,8 @@ async function spInit(){
   if(_app)return _app;
   if(typeof msal==="undefined")return null;
   _app=new msal.PublicClientApplication({
-    auth:{clientId:SP_CLIENT_ID,authority:"https://login.microsoftonline.com/3b6db0bb-c85e-4c5a-bf6b-62e4a90222d2",redirectUri:"https://ssoma-pachachaca.vercel.app"},
-    cache:{cacheLocation:"localStorage",storeAuthStateInCookie:true}
+    auth:{clientId:SP_CLIENT_ID,authority:"https://login.microsoftonline.com/3b6db0bb-c85e-4c5a-bf6b-62e4a90222d2",redirectUri:"https://ssoma-pachachaca.vercel.app",navigateToLoginRequestUrl:false},
+    cache:{cacheLocation:"sessionStorage"}
   });
   await _app.initialize();
   const accs=_app.getAllAccounts();
