@@ -391,7 +391,9 @@ function spSafe(s){return String(s).replace(/[\/:*?"<>|]/g,"-").replace(/\s+/g,"
 async function spGuardar(drive,reg,comp,onPct){
   const driveId=drive.driveId;
   const token=await spToken();
-  const folder=`${drive.libName}/${SP_LIB_SUBFOLDER}/${reg.periodo}/${comp.prog} - ${comp.progNombre.replace(/[/:]/g,"").trim().slice(0,50)}`;
+  const frente=reg.actividadLabel?spSafe(reg.actividadLabel.slice(0,60)):"Sin-frente";
+  const progCarpeta=`${comp.prog} - ${comp.progNombre.replace(/[/:]/g,"").trim().slice(0,50)}`;
+  const folder=`${drive.libName}/${SP_LIB_SUBFOLDER}/${reg.periodo}/${progCarpeta}/${frente}`;
   onPct(10,"Creando carpetas...");
   const fid=await spFolder(token,driveId,folder);
   const base=`${spDate(reg.fecha)}_${comp.id}_${spSafe(comp.texto.slice(0,35))}`;
@@ -403,7 +405,7 @@ async function spGuardar(drive,reg,comp,onPct){
   }
   onPct(85,"Guardando registro JSON...");
   const meta={id:reg.id,fecha:spDate(reg.fecha),periodo:reg.periodo,compromisoId:comp.id,
-    programa:comp.progNombre,subPrograma:comp.subNombre,compromiso:comp.texto,
+    frente:reg.actividadLabel||"",programa:comp.progNombre,subPrograma:comp.subNombre,compromiso:comp.texto,
     medioVerificacion:comp.medio,responsablePrograma:comp.resp,responsableSSOMa:reg.ssoma,
     estado:reg.estado,notas:reg.notas||"",sustento:reg.sustento||"",
     archivos:(files||[]).map(f=>f.name),carpeta:folder};
@@ -472,7 +474,17 @@ function Modal({comp,periodo,actividad,subActividad,existing,onClose,onSave}){
   const [saving,setSaving]=useState(false);
   const needsSustento=estado==="No corresponde";
   const needsFiles=estado!=="No corresponde"&&estado!=="No aplica este período";
-  const addFiles=fs=>setFiles(p=>[...p,...Array.from(fs).map(f=>({id:uid(),name:f.name,type:f.type,size:f.size,preview:f.type.startsWith("image")?URL.createObjectURL(f):null}))]);
+  const addFiles=fs=>{
+    Array.from(fs).forEach(f=>{
+      const reader=new FileReader();
+      reader.onload=e=>{
+        setFiles(p=>[...p,{id:uid(),name:f.name,type:f.type,size:f.size,
+          blob:new Blob([e.target.result],{type:f.type}),
+          preview:f.type.startsWith("image")?URL.createObjectURL(f):null}]);
+      };
+      reader.readAsArrayBuffer(f);
+    });
+  };
   const save=async()=>{
     if(!ssoma.trim()){alert("Ingresa el nombre del responsable SSOMA");return;}
     if(needsSustento&&!sustento.trim()){alert("El sustento técnico es obligatorio");return;}
@@ -684,8 +696,14 @@ function App(){
     showToast("✅  Evidencia guardada");
     if(spDrive&&comp){
       setSpBusy(true);setSpPct(5);setSpMsg("Subiendo a SharePoint...");
+      // Agregar label de actividad al registro para la carpeta
+      const actividadActual=ACTIVIDADES.find(a=>a.id===actividad);
+      const subActividadActual=actividadActual?.subs?.find(s=>s.id===subActividad);
+      const regConFrente={...reg,
+        actividadLabel: subActividadActual ? subActividadActual.label : (actividadActual?.label||"")
+      };
       try{
-        await SP.spGuardar(spDrive,reg,comp,(pct,msg)=>{setSpPct(pct);setSpMsg(msg);});
+        await SP.spGuardar(spDrive,regConFrente,comp,(pct,msg)=>{setSpPct(pct);setSpMsg(msg);});
         showToast("☁  Guardado en SharePoint","ok");
       }catch(e){
         console.error("SP:",e);
