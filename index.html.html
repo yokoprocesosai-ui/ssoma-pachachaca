@@ -391,9 +391,13 @@ function spSafe(s){return String(s).replace(/[\/:*?"<>|]/g,"-").replace(/\s+/g,"
 async function spGuardar(drive,reg,comp,onPct){
   const driveId=drive.driveId;
   const token=await spToken();
-  const frente=reg.actividadLabel?spSafe(reg.actividadLabel.slice(0,60)):"Sin-frente";
   const progCarpeta=`${comp.prog} - ${comp.progNombre.replace(/[/:]/g,"").trim().slice(0,50)}`;
-  const folder=`${drive.libName}/${SP_LIB_SUBFOLDER}/${reg.periodo}/${progCarpeta}/${frente}`;
+  const frente=reg.actividadLabel?spSafe(reg.actividadLabel.slice(0,60)):"Sin-frente";
+  const subFrente=reg.subActividadLabel?spSafe(reg.subActividadLabel.slice(0,60)):"";
+  const compCarpeta=`${comp.id} - ${spSafe(comp.texto.slice(0,45))}`;
+  const folder=subFrente
+    ? `${drive.libName}/${SP_LIB_SUBFOLDER}/${reg.periodo}/${progCarpeta}/${frente}/${subFrente}/${compCarpeta}`
+    : `${drive.libName}/${SP_LIB_SUBFOLDER}/${reg.periodo}/${progCarpeta}/${frente}/${compCarpeta}`;
   onPct(10,"Creando carpetas...");
   const fid=await spFolder(token,driveId,folder);
   const base=`${spDate(reg.fecha)}_${comp.id}_${spSafe(comp.texto.slice(0,35))}`;
@@ -405,11 +409,30 @@ async function spGuardar(drive,reg,comp,onPct){
   }
   onPct(85,"Guardando registro JSON...");
   const meta={id:reg.id,fecha:spDate(reg.fecha),periodo:reg.periodo,compromisoId:comp.id,
-    frente:reg.actividadLabel||"",programa:comp.progNombre,subPrograma:comp.subNombre,compromiso:comp.texto,
+    frente:reg.actividadLabel||"",subFrente:reg.subActividadLabel||"",programa:comp.progNombre,subPrograma:comp.subNombre,compromiso:comp.texto,
     medioVerificacion:comp.medio,responsablePrograma:comp.resp,responsableSSOMa:reg.ssoma,
     estado:reg.estado,notas:reg.notas||"",sustento:reg.sustento||"",
     archivos:(files||[]).map(f=>f.name),carpeta:folder};
   await spUpload(token,driveId,fid,`${base}_REGISTRO.json`,new Blob([JSON.stringify(meta,null,2)],{type:"application/json"}));
+  // Archivo .txt con observaciones si las hay
+  if((reg.notas&&reg.notas.trim())||(reg.sustento&&reg.sustento.trim())){
+    const txt=[
+      "COMPROMISO: "+comp.texto,
+      "FECHA: "+dateStr,
+      "RESPONSABLE: "+reg.ssoma,
+      "ESTADO: "+reg.estado,
+      "FRENTE: "+(reg.actividadLabel||"-"),
+      "PROGRAMA: "+comp.progNombre,
+      "",
+      reg.notas&&reg.notas.trim() ? "OBSERVACIONES:
+"+reg.notas.trim() : "",
+      reg.sustento&&reg.sustento.trim() ? "SUSTENTO:
+"+reg.sustento.trim() : "",
+    ].filter(l=>l!=="").join("
+");
+    await spUpload(token,driveId,fid,base+"_OBSERVACIONES.txt",
+      new Blob([txt],{type:"text/plain;charset=utf-8"}));
+  }
   onPct(100,"Guardado en SharePoint");
 }
 
@@ -700,7 +723,8 @@ function App(){
       const actividadActual=ACTIVIDADES.find(a=>a.id===actividad);
       const subActividadActual=actividadActual?.subs?.find(s=>s.id===subActividad);
       const regConFrente={...reg,
-        actividadLabel: subActividadActual ? subActividadActual.label : (actividadActual?.label||"")
+        actividadLabel: actividadActual?.label||"",
+        subActividadLabel: subActividadActual?.label||""
       };
       try{
         await SP.spGuardar(spDrive,regConFrente,comp,(pct,msg)=>{setSpPct(pct);setSpMsg(msg);});
