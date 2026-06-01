@@ -749,7 +749,12 @@ function App(){
     finally{setTimeout(()=>{setSpBusy(false);setSpPct(0);setSpMsg("");},2000);}
   };
   const handleNoAplica=(comp,sustento)=>{addReg({id:uid(),compromisoId:comp.id,periodo,actividad,subActividad,ssoma:"— No aplica —",estado:"No aplica este período",sustento,notas:"",files:[],fecha:Date.now()});showToast("🚫  Registrado como No aplica");};
-  const getRegs=cId=>registros.filter(r=>r.compromisoId===cId&&r.periodo===periodo);
+  const getRegs=cId=>registros.filter(r=>
+    r.compromisoId===cId &&
+    r.periodo===periodo &&
+    (r.actividad||"")===(actividad||"") &&
+    (r.subActividad||"")===(subActividad||"")
+  );
   const getAggStatus=cId=>{const rs=getRegs(cId);if(!rs.length)return null;if(rs.some(r=>r.estado==="Cumplido al 100%"))return "Cumplido al 100%";if(rs.some(r=>r.estado==="Cumplido parcialmente"))return "Cumplido parcialmente";if(rs.some(r=>r.estado==="No corresponde"))return "No corresponde";if(rs.some(r=>r.estado==="No aplica este período"))return "No aplica este período";return "Pendiente";};
   const actividadActual=ACTIVIDADES.find(a=>a.id===actividad);
   const tieneSubs=actividadActual?.subs?.length>0;
