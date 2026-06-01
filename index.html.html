@@ -286,20 +286,21 @@ const SP_SCOPES=["https://graph.microsoft.com/Files.ReadWrite","https://graph.mi
 const SP_LIB_SUBFOLDER="Pachachaca";  // carpeta del proyecto dentro de Documentos
 let _app=null,_acc=null;
 
-function spInit(){
+async function spInit(){
   if(_app)return _app;
   if(typeof msal==="undefined")return null;
   _app=new msal.PublicClientApplication({
     auth:{clientId:SP_CLIENT_ID,authority:"https://login.microsoftonline.com/common",redirectUri:"https://ssoma-pachachaca.vercel.app"},
     cache:{cacheLocation:"localStorage",storeAuthStateInCookie:true}
   });
+  await _app.initialize();
   const accs=_app.getAllAccounts();
   if(accs.length)_acc=accs[0];
   return _app;
 }
 
 async function spConnect(onStatus){
-  const app=spInit();
+  const app=await spInit();
   if(!app){onStatus("error","MSAL no cargó");return null;}
   // 1. Sesión activa en cache
   if(_acc){
@@ -333,7 +334,7 @@ async function spConnect(onStatus){
 }
 
 async function spToken(){
-  const app=spInit();if(!app)throw new Error("MSAL no cargado");
+  const app=await spInit();if(!app)throw new Error("MSAL no cargado");
   try{const r=await app.acquireTokenSilent({scopes:SP_SCOPES,account:_acc});return r.accessToken;}
   catch{const r=await app.acquireTokenPopup({scopes:SP_SCOPES});_acc=r.account;return r.accessToken;}
 }
@@ -655,7 +656,7 @@ function App(){
   useEffect(()=>{
     const run=async()=>{
       try{
-        SP.spInit();
+        await SP.spInit();
         const acc=await SP.spConnect((status,msg)=>{
           if(status==="ok"){}
           else if(status==="connecting")setSpMsg(msg);
