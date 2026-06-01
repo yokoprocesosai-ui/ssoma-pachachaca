@@ -222,7 +222,7 @@ function spInit(){
   if(_app)return _app;
   if(typeof msal==="undefined")return null;
   _app=new msal.PublicClientApplication({
-    auth:{clientId:SP_CLIENT_ID,authority:"https://login.microsoftonline.com/common",redirectUri:location.href},
+    auth:{clientId:SP_CLIENT_ID,authority:"https://login.microsoftonline.com/common",redirectUri:"https://ssoma-pachachaca.vercel.app"},
     cache:{cacheLocation:"localStorage",storeAuthStateInCookie:true}
   });
   const accs=_app.getAllAccounts();
