@@ -431,6 +431,7 @@ async function spExportar(drive,registros,periodo,compromisos,onPct){
 }
 
 window.SP={spInit,spConnect,spToken,spDriveId,spGuardar,spExportar,spDate,spSafe};
+console.log("%c✓ SP module cargado","color:green;font-weight:bold", typeof window.SP.spConnect);
 </script>
 <script type="text/babel">
 const { useState, useEffect, useMemo } = React;
