@@ -416,20 +416,7 @@ async function spGuardar(drive,reg,comp,onPct){
   await spUpload(token,driveId,fid,`${base}_REGISTRO.json`,new Blob([JSON.stringify(meta,null,2)],{type:"application/json"}));
   // Archivo .txt con observaciones si las hay
   if((reg.notas&&reg.notas.trim())||(reg.sustento&&reg.sustento.trim())){
-    const txt=[
-      "COMPROMISO: "+comp.texto,
-      "FECHA: "+dateStr,
-      "RESPONSABLE: "+reg.ssoma,
-      "ESTADO: "+reg.estado,
-      "FRENTE: "+(reg.actividadLabel||"-"),
-      "PROGRAMA: "+comp.progNombre,
-      "",
-      reg.notas&&reg.notas.trim() ? "OBSERVACIONES:
-"+reg.notas.trim() : "",
-      reg.sustento&&reg.sustento.trim() ? "SUSTENTO:
-"+reg.sustento.trim() : "",
-    ].filter(l=>l!=="").join("
-");
+    const txt="COMPROMISO: "+comp.texto+"\nFECHA: "+dateStr+"\nRESPONSABLE: "+reg.ssoma+"\nESTADO: "+reg.estado+"\nFRENTE: "+(reg.actividadLabel||"-")+"\nPROGRAMA: "+comp.progNombre+(reg.notas&&reg.notas.trim()?"\n\nOBSERVACIONES:\n"+reg.notas.trim():"")+(reg.sustento&&reg.sustento.trim()?"\n\nSUSTENTO:\n"+reg.sustento.trim():"")
     await spUpload(token,driveId,fid,base+"_OBSERVACIONES.txt",
       new Blob([txt],{type:"text/plain;charset=utf-8"}));
   }
